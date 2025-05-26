@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,85 @@ class MovieHorizontalListView extends StatelessWidget {
         children: [
           if (title != null || subtitle != null)
             _Title(title: title, subtitle: subtitle),
+          Expanded(
+            child: ListView.builder(
+              itemCount: movies.length,
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              itemBuilder: (context, index) => _Slide(movie: movies[index]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Slide extends StatelessWidget {
+  final Movie movie;
+
+  const _Slide({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image
+          SizedBox(
+            width: 150,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                movie.posterPath,
+                fit: BoxFit.cover,
+                width: 150,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    return Padding(
+                      padding: EdgeInsets.only(top: 100),
+                      child: const Center(
+                        child: CircularProgressIndicator(strokeWidth: 3),
+                      ),
+                    );
+                  }
+                  return FadeIn(child: child);
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+
+          // Title
+          SizedBox(
+            width: 150,
+            child: Text(
+              movie.title,
+              maxLines: 2,
+              style: textStyle.titleSmall,
+              textAlign: TextAlign.center,
+            ),
+          ),
+
+          // Rating
+          Row(
+            children: [
+              Icon(Icons.star_half_outlined, color: Colors.yellow.shade800),
+              const SizedBox(width: 5),
+              Text(
+                movie.voteAverage.toString(),
+                style: textStyle.bodyMedium?.copyWith(
+                  color: Colors.yellow.shade800,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text('${movie.popularity}', style: textStyle.bodySmall),
+            ],
+          ),
         ],
       ),
     );
