@@ -47,9 +47,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final popularMovies = ref.watch(popularMoviesProvider);
     final topRatedMovies = ref.watch(topRatedMoviesProvider);
 
-    if (slideShowMovies.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // return FullScreenLoader();
 
     return CustomScrollView(
       slivers: [
