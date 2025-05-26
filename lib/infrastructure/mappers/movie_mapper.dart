@@ -18,7 +18,7 @@ class MovieMapper {
     posterPath:
         movie.posterPath != ''
             ? '${Environment.imageUrl}${movie.posterPath}'
-            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdSx3JMdW7BwCPy6VFIrEMZI3Q7p-pIdVedA&s',
+            : 'no-poster',
     releaseDate: movie.releaseDate,
     title: movie.title,
     video: movie.video,
