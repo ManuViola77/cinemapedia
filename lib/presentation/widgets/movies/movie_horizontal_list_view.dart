@@ -77,69 +77,71 @@ class _Slide extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image
-          SizedBox(
-            width: 150,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                movie.posterPath,
-                fit: BoxFit.cover,
-                width: 150,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    return Padding(
-                      padding: EdgeInsets.only(top: 100),
-                      child: const Center(
-                        child: CircularProgressIndicator(strokeWidth: 3),
-                      ),
-                    );
-                  }
-                  return FadeIn(child: child);
-                },
+    return FadeInRight(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            SizedBox(
+              width: 150,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.network(
+                  movie.posterPath,
+                  fit: BoxFit.cover,
+                  width: 150,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress != null) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 100),
+                        child: const Center(
+                          child: CircularProgressIndicator(strokeWidth: 3),
+                        ),
+                      );
+                    }
+                    return FadeIn(child: child);
+                  },
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 5),
+            const SizedBox(height: 5),
 
-          // Title
-          SizedBox(
-            width: 150,
-            child: Text(
-              movie.title,
-              maxLines: 2,
-              style: textStyle.titleSmall,
-              textAlign: TextAlign.center,
+            // Title
+            SizedBox(
+              width: 150,
+              child: Text(
+                movie.title,
+                maxLines: 2,
+                style: textStyle.titleSmall,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
 
-          // Rating
-          SizedBox(
-            width: 150,
-            child: Row(
-              children: [
-                Icon(Icons.star_half_outlined, color: Colors.yellow.shade800),
-                const SizedBox(width: 5),
-                Text(
-                  movie.voteAverage.toString(),
-                  style: textStyle.bodyMedium?.copyWith(
-                    color: Colors.yellow.shade800,
+            // Rating
+            SizedBox(
+              width: 150,
+              child: Row(
+                children: [
+                  Icon(Icons.star_half_outlined, color: Colors.yellow.shade800),
+                  const SizedBox(width: 5),
+                  Text(
+                    movie.voteAverage.toString(),
+                    style: textStyle.bodyMedium?.copyWith(
+                      color: Colors.yellow.shade800,
+                    ),
                   ),
-                ),
-                const Spacer(),
-                Text(
-                  HumanFormats.number(movie.popularity),
-                  style: textStyle.bodySmall,
-                ),
-              ],
+                  const Spacer(),
+                  Text(
+                    HumanFormats.number(movie.popularity),
+                    style: textStyle.bodySmall,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
