@@ -45,18 +45,41 @@ class _HomeViewState extends ConsumerState<_HomeView> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return Column(
-      children: [
-        const CustomAppBar(),
-        MoviesSlideShow(movies: slideShowMovies),
-        MovieHorizontalListView(
-          movies: nowPlayingMovies,
-          title: 'En Cines',
-          subtitle: 'Lunes 20',
-          loadNextPage:
-              ref.read(nowPlayingMoviesProvider.notifier).loadNextPage,
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const CustomAppBar(),
+          MoviesSlideShow(movies: slideShowMovies),
+          MovieHorizontalListView(
+            movies: nowPlayingMovies,
+            title: 'En Cines',
+            subtitle: 'Lunes 20',
+            loadNextPage:
+                ref.read(nowPlayingMoviesProvider.notifier).loadNextPage,
+          ),
+          MovieHorizontalListView(
+            movies: nowPlayingMovies,
+            title: 'Próximamente',
+            subtitle: 'En este mes',
+            loadNextPage:
+                ref.read(nowPlayingMoviesProvider.notifier).loadNextPage,
+          ),
+          MovieHorizontalListView(
+            movies: nowPlayingMovies,
+            title: 'Populares',
+            loadNextPage:
+                ref.read(nowPlayingMoviesProvider.notifier).loadNextPage,
+          ),
+          MovieHorizontalListView(
+            movies: nowPlayingMovies,
+            title: 'Mejor Calificadas',
+            subtitle: 'Desde siempre',
+            loadNextPage:
+                ref.read(nowPlayingMoviesProvider.notifier).loadNextPage,
+          ),
+          const SizedBox(height: 25),
+        ],
+      ),
     );
   }
 }
