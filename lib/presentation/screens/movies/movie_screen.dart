@@ -191,6 +191,7 @@ class _CastingInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final List<Actor>? actors = ref.watch(actorsByMovieProvider)[movieId];
+    final textStyles = Theme.of(context).textTheme;
 
     if (actors == null) {
       return const Center(child: CircularProgressIndicator(strokeWidth: 3));
@@ -199,8 +200,46 @@ class _CastingInfo extends ConsumerWidget {
     return SizedBox(
       height: 300,
       child: ListView.builder(
+        scrollDirection: Axis.horizontal,
         itemCount: actors.length,
-        itemBuilder: (context, index) => Text(actors[index].name),
+        itemBuilder: (context, index) {
+          final actor = actors[index];
+          return Container(
+            padding: const EdgeInsets.all(8.0),
+            width: 135,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Actor Photo
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.network(
+                    actor.profilePath,
+                    width: 135,
+                    height: 180,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // Actor Name
+                Text(
+                  actor.name,
+                  style: textStyles.bodyMedium,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                // Character Name
+                if (actor.character != null)
+                  Text(
+                    'as ${actor.character!}',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
