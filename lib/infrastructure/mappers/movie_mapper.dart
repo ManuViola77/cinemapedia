@@ -19,7 +19,7 @@ class MovieMapper {
     posterPath:
         movie.posterPath != ''
             ? '${Environment.imageUrl}${movie.posterPath}'
-            : 'no-poster',
+            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdSx3JMdW7BwCPy6VFIrEMZI3Q7p-pIdVedA&s',
     releaseDate:
         movie.releaseDate != null ? movie.releaseDate! : DateTime.now(),
     title: movie.title,
