@@ -1,3 +1,4 @@
+import 'package:cinemapedia/domain/entities/actor.dart';
 import 'package:cinemapedia/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,9 @@ class MovieScreenState extends ConsumerState<MovieScreen> {
   void initState() {
     super.initState();
     ref.read(movieInfoProvider.notifier).loadMovie(widget.movieId);
+    ref
+        .read(actorsByMovieProvider.notifier)
+        .loadActorsByMovieId(widget.movieId);
   }
 
   @override
@@ -59,7 +63,6 @@ class _MovieDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     final size = MediaQuery.of(context).size;
     final textStyles = Theme.of(context).textTheme;
 
@@ -112,7 +115,9 @@ class _MovieDetails extends StatelessWidget {
           ),
         ),
 
-        // TODO: mostrar casting
+        // Casting
+        _CastingInfo(movieId: movie.id.toString()),
+
         const SizedBox(height: 50),
       ],
     );
@@ -134,11 +139,12 @@ class _CustomSliverAppBar extends StatelessWidget {
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
         titlePadding: const EdgeInsets.all(20),
-        title: Text(
+        // title not necessary
+        /* title: Text(
           movie.title,
           style: TextStyle(fontSize: 20, color: Colors.white),
           textAlign: TextAlign.start,
-        ),
+        ), */
         background: Stack(
           children: [
             SizedBox.expand(
@@ -173,6 +179,28 @@ class _CustomSliverAppBar extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _CastingInfo extends ConsumerWidget {
+  final String movieId;
+  const _CastingInfo({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final List<Actor>? actors = ref.watch(actorsByMovieProvider)[movieId];
+
+    if (actors == null) {
+      return const Center(child: CircularProgressIndicator(strokeWidth: 3));
+    }
+
+    return SizedBox(
+      height: 300,
+      child: ListView.builder(
+        itemCount: actors.length,
+        itemBuilder: (context, index) => Text(actors[index].name),
       ),
     );
   }
