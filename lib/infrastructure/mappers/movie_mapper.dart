@@ -20,7 +20,8 @@ class MovieMapper {
         movie.posterPath != ''
             ? '${Environment.imageUrl}${movie.posterPath}'
             : 'no-poster',
-    releaseDate: movie.releaseDate,
+    releaseDate:
+        movie.releaseDate != null ? movie.releaseDate! : DateTime.now(),
     title: movie.title,
     video: movie.video,
     voteAverage: movie.voteAverage,
