@@ -12,6 +12,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   List<Movie> initialMovies;
 
   StreamController<List<Movie>> debouncedMovies = StreamController.broadcast();
+  StreamController<bool> isLoadingStream = StreamController.broadcast();
   Timer? _debounceTimer;
 
   SearchMovieDelegate({required this.searchMovies, required this.initialMovies})
@@ -22,10 +23,13 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
 
   void clearStreams() {
     debouncedMovies.close();
+    isLoadingStream.close();
     _debounceTimer?.cancel();
   }
 
   void _onQueryChanged(String query) {
+    isLoadingStream.add(true);
+
     if (_debounceTimer?.isActive ?? false) {
       _debounceTimer!.cancel();
     }
@@ -34,6 +38,7 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
       final List<Movie> movies = await searchMovies(query);
       debouncedMovies.add(movies);
       initialMovies = movies;
+      isLoadingStream.add(false);
     });
   }
 
@@ -65,13 +70,31 @@ class SearchMovieDelegate extends SearchDelegate<Movie?> {
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
-      FadeIn(
-        animate: query.isNotEmpty,
-        duration: const Duration(milliseconds: 200),
-        child: IconButton(
-          onPressed: () => query = '',
-          icon: const Icon(Icons.clear),
-        ),
+      StreamBuilder(
+        initialData: false,
+        stream: isLoadingStream.stream,
+        builder: (context, snapshot) {
+          if (snapshot.data ?? false) {
+            return SpinPerfect(
+              duration: const Duration(seconds: 1),
+              spins: 10,
+              infinite: true,
+              child: IconButton(
+                onPressed: () => query = '',
+                icon: const Icon(Icons.refresh_rounded),
+              ),
+            );
+          }
+
+          return FadeIn(
+            animate: query.isNotEmpty,
+            duration: const Duration(milliseconds: 200),
+            child: IconButton(
+              onPressed: () => query = '',
+              icon: const Icon(Icons.clear),
+            ),
+          );
+        },
       ),
     ];
   }
