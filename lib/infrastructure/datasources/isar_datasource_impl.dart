@@ -54,6 +54,7 @@ class IsarDatasourceImpl extends LocalStorageDatasource {
       isar.writeTxnSync(() {
         isar.movies.deleteSync(favoriteMovie.isarId!);
       });
+      return;
     }
     //insertar
     isar.writeTxnSync(() {
